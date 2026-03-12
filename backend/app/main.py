@@ -1,12 +1,19 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
 from app.db import get_db
 from sqlalchemy import func
 from app.models import Product, StockMovement
 from app.schemas import ProductCreate, ProductResponse, StockMovementCreate, StockMovementResponse
 
 app = FastAPI()
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/products", response_model=ProductResponse)
 def create_product(product: ProductCreate, db: Session = Depends(get_db)):
@@ -73,3 +80,7 @@ def get_products(low_stock: bool = False, db: Session = Depends(get_db)):
 
     results = query.all()
     return results
+@app.get("/movements/{product_id}")
+def get_product_movements(product_id: int, db: Session = Depends(get_db)):
+    movements = db.query(StockMovement).filter(StockMovement.product_id == product_id).order_by(StockMovement.id.desc()).all()
+    return movements
