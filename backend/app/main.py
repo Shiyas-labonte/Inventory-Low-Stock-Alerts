@@ -17,24 +17,25 @@ app.add_middleware(
 
 @app.post("/products", response_model=ProductResponse)
 def create_product(product: ProductCreate, db: Session = Depends(get_db)):
-    existing = db.query(Product).filter((Product.name == product.name) | (Product.sku == product.sku)).first()
-    if existing:
-        raise HTTPException(status_code=409,detail="Product with same name or SKU already exists")
-    new_product = Product(
-        name=product.name,
-        sku=product.sku,
-        reorder_level=product.reorder_level
-    )
-    db.add(new_product)
-    db.commit()
-    db.refresh(new_product)
-    return {
-        "id": new_product.id,
-        "name": new_product.name,
-        "sku": new_product.sku,
-        "reorder_level": new_product.reorder_level,
-        "current_stock": 0
-    }
+
+        existing = db.query(Product).filter((Product.name == product.name) | (Product.sku == product.sku)).first()
+        if existing:
+          raise HTTPException(status_code=409,detail="Product with same name or SKU already exists")
+        new_product = Product(
+            name=product.name.strip(),
+            sku=product.sku.strip(),
+            reorder_level=product.reorder_level
+        )
+        db.add(new_product)
+        db.commit()
+        db.refresh(new_product)
+        return {
+            "id": new_product.id,
+            "name": new_product.name,
+            "sku": new_product.sku,
+            "reorder_level": new_product.reorder_level,
+            "current_stock": 0
+        }
 
 @app.post("/stock-movements", response_model = StockMovementResponse)
 def create_stock_movement(data: StockMovementCreate, db: Session = Depends(get_db)):
@@ -82,5 +83,5 @@ def get_products(low_stock: bool = False, db: Session = Depends(get_db)):
     return results
 @app.get("/movements/{product_id}")
 def get_product_movements(product_id: int, db: Session = Depends(get_db)):
-    movements = db.query(StockMovement).filter(StockMovement.product_id == product_id).order_by(StockMovement.id.desc()).all()
+    movements = db.query(StockMovement).filter(StockMovement.product_id == product_id).order_by(StockMovement.id.asc()).all()
     return movements
