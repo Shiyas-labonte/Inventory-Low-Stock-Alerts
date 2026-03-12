@@ -1,0 +1,69 @@
+import { createSlice } from "@reduxjs/toolkit";
+import {fetchProducts,createProduct,fetchProductDetail,addStockMovement,getMovements} from "./productThunks";
+
+const initialState = {
+  list: [],
+  movements: [],
+  detail: null,
+  status: "idle",
+  error: null,
+  search: "",
+  lowStockOnly: false
+};
+
+const productSlice = createSlice({
+  name: "products",
+  initialState,
+  reducers: {
+
+    setSearch(state, action) {
+      state.search = action.payload;
+    },
+
+    toggleLowStock(state) {
+      state.lowStockOnly = !state.lowStockOnly;
+    }
+
+  },
+
+  extraReducers: (builder) => {
+
+    builder
+
+      .addCase(fetchProducts.pending, (state) => {
+        state.status = "loading";
+      })
+
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.list = action.payload;
+      })
+
+      .addCase(fetchProducts.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+
+      .addCase(createProduct.fulfilled, (state, action) => {
+        state.list.push(action.payload);
+      })
+
+      .addCase(fetchProductDetail.fulfilled, (state, action) => {
+        state.detail = action.payload;
+      })
+
+      .addCase(addStockMovement.fulfilled, (state, action) => {
+        if (state.detail) {
+          state.detail.current_stock = action.payload.current_stock;
+        }
+      })
+      .addCase(getMovements.fulfilled, (state, action) => {
+        state.movements = action.payload;
+      });
+
+  }
+});
+
+export const { setSearch, toggleLowStock } = productSlice.actions;
+
+export default productSlice.reducer;
