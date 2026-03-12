@@ -2,12 +2,13 @@ import {BrowserRouter,Route,Routes} from "react-router-dom";
 import ProductList from "./pages/ProductList";
 import ProductDetail from "./pages/ProductDetail";
 import ProductMovements from "./pages/ProductMovements";
+import Header from "./components/Header";
 
 function App() {
   return (
     <BrowserRouter>
 
-      <h1 style={{textAlign:"center"}}>Inventory Tracker</h1>
+      <Header />
 
       <Routes>
         <Route path="/" element={<ProductList />} />
