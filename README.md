@@ -48,7 +48,7 @@ Inventory-Low-Stock-Alerts
 │   │   ├── components
 │   │   │   └── CreateProductModal.jsx
 |   |   |    ├── CreateProductModal.test.js 
-│   │   │    ├── StockMovementForm.test.js
+│   │   │    ├── StockMovementForm.jsx
 │   │   │
 │   │   ├── pages
 │   │   │   └── ProductList.jsx
