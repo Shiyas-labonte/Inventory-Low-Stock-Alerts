@@ -56,32 +56,19 @@ function StockMovementForm({ productId }) {
   return (
 
     <form onSubmit={handleSubmit}>
-
-      {/* Movement Type */}
       <div className="mb-3">
         <label className="form-label">Movement Type</label>
-
-        <select
-          className="form-select"
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-        >
+        <select className="form-select" value={type} onChange={(e) => setType(e.target.value)}>
           <option value="in">Stock In</option>
           <option value="out">Stock Out</option>
         </select>
       </div>
 
-      {/* Quantity */}
       <div className="mb-3">
 
         <label className="form-label">Quantity</label>
-
         <div className="input-group">
-
-          <button type="button" className="btn btn-outline-danger"onClick={decrease}>
-            −
-          </button>
-
+          <button type="button" className="btn btn-outline-danger"onClick={decrease}>−</button>
           <input
             type="number"
             className="form-control text-center"
@@ -95,15 +82,13 @@ function StockMovementForm({ productId }) {
           </button>
         </div>
       </div>
-      {/* Reason */}
+
       <div className="mb-3">
         <label className="form-label">Reason</label>
         <input type="text" className="form-control" placeholder="Enter reason" value={reason} onChange={(e) => setReason(e.target.value)}/>
       </div>
-      {/* Submit */}
-      <button type="submit" className="btn btn-primary w-100">
-        Submit Movement
-      </button>
+
+      <button type="submit" className="btn btn-primary w-100">Submit Movement</button>
       {error && (
         <div className="alert alert-danger mt-3">
           {error}

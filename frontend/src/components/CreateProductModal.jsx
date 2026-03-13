@@ -30,29 +30,20 @@ function CreateProductModal({ close }) {
     if (result.meta.requestStatus === "fulfilled") {
 
       setSuccess("Product created successfully");
-
       // close modal after 1.5 seconds
-      setTimeout(() => {
-        close();
-      }, 1500);
-
+      setTimeout(() => {close();}, 1500);
     } else {
-
       if (result.payload?.detail) {
 
         if (Array.isArray(result.payload.detail)) {
-          const messages = result.payload.detail
-            .map(err => err.msg)
-            .join(", ");
+          const messages = result.payload.detail.map(err => err.msg).join(", ");
           setError(messages);
         } else {
           setError(result.payload.detail);
         }
-
       } else {
         setError("Something went wrong");
       }
-
     }
   };
 
@@ -73,41 +64,22 @@ function CreateProductModal({ close }) {
 
               <div className="mb-2">
                 <label className="form-label">Product Name</label>
-                <input
-                  className="form-control"
-                  value={form.name}
-                  onChange={(e) =>
-                    setForm({ ...form, name: e.target.value })
-                  }
-                />
+                <input className="form-control" value={form.name}onChange={(e) =>setForm({ ...form, name: e.target.value })}/>
               </div>
 
               <div className="mb-2">
-                <label className="form-label">SKU</label>
-                <input
-                  className="form-control"
-                  value={form.sku}
-                  onChange={(e) =>
-                    setForm({ ...form, sku: e.target.value })
-                  }
-                />
+                  <label className="form-label">SKU</label>
+                  <input className="form-control" value={form.sku}
+                    onChange={(e) =>setForm({ ...form, sku: e.target.value })}
+                  />
               </div>
 
               <div className="mb-2">
                 <label className="form-label">Reorder Level</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  value={form.reorder_level}
-                  onChange={(e) =>
-                    setForm({ ...form, reorder_level: e.target.value })
-                  }
-                />
+                <input type="number" className="form-control" value={form.reorder_level}onChange={(e) =>setForm({ ...form, reorder_level: e.target.value })}/>
               </div>
 
-              <button className="btn btn-success w-100">
-                Create
-              </button>
+              <button className="btn btn-success w-100">Create</button>
 
               {/* Error Message */}
               {error && (

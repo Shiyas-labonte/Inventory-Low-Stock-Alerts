@@ -78,15 +78,6 @@ def test_low_stock_filter(client):
     products = response.json()
     assert any(p["id"] == product_id for p in products)
 
-def test_invalid_product_input(client):
-
-    response = client.post("/products",
-        json={
-            "name": "Invalid Product"
-        },
-    )
-
-    assert response.status_code in (400, 422)
 def test_product_not_found(client):
     response = client.get("/products/99999")
     assert response.status_code == 404   

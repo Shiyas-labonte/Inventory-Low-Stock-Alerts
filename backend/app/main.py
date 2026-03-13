@@ -87,6 +87,7 @@ def get_products(low_stock: bool = False, db: Session = Depends(get_db)):
 
     results = query.all()
     return results
+
 @app.get("/movements/{product_id}")
 def get_product_movements(product_id: int, db: Session = Depends(get_db)):
     movements = db.query(StockMovement).filter(StockMovement.product_id == product_id).order_by(StockMovement.id.asc()).all()
