@@ -6,6 +6,7 @@ const initialState = {
   movements: [],
   detail: null,
   status: "idle",
+  loading: false,
   error: null,
   search: "",
   lowStockOnly: false

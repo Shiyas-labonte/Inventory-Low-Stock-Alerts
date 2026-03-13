@@ -49,7 +49,7 @@ function CreateProductModal({ close }) {
 
   return (
 
-    <div className="modal show d-block">
+    <div className="modal show d-block" role="dialog">
       <div className="modal-dialog">
         <div className="modal-content">
 
