@@ -13,10 +13,12 @@ function ProductDetail() {
   const { detail } = useSelector((state) => state.products);
 
   useEffect(() => {dispatch(fetchProductDetail(id));}, [dispatch, id]);
-  if (!detail) return <p className="text-center mt-5">Loading...</p>;
+  if (!detail) return <p className="text-center mt-5">Not found</p>;
   return (
     <div className="container mt-4">
       <button className="btn btn-secondary mb-3"onClick={() => navigate("/")}>← Back</button>
+      <h2 className="mb-3">Update product movement</h2>
+      <hr className="mb-2" style={{padding: "0 35px"}} />
 
       <div className="row">
         <div className="col-md-6">

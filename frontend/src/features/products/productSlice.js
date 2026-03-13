@@ -45,7 +45,7 @@ const productSlice = createSlice({
       })
 
       .addCase(createProduct.fulfilled, (state, action) => {
-        state.list.push(action.payload);
+        state.list.unshift(action.payload);
       })
 
       .addCase(fetchProductDetail.fulfilled, (state, action) => {

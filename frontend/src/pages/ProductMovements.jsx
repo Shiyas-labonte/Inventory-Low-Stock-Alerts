@@ -22,7 +22,8 @@ function ProductMovements() {
     <div className="container mt-4">
     <button className="btn btn-secondary mb-3"onClick={() => navigate("/")}>← Back</button>
       <h3>Stock Movement History - {product?.name || "Loading..."}</h3>
-      <table className="table table-bordered table-striped mt-3">
+      <hr className="mb-2" style={{padding: "0 35px"}} />
+      <table className="table table-bordered  mt-3">
         <thead className="table-primary">
           <tr>
             <th>Date</th>

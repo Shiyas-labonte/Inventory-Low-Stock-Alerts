@@ -62,7 +62,7 @@ function ProductList() {
             <th>SKU</th>
             <th>Current Stock</th>
             <th>Reorder Level</th>
-            <th className="">Actions</th>
+            <th className="text-center">Actions</th>
           </tr>
         </thead>
 
@@ -74,8 +74,11 @@ function ProductList() {
               <td className="text-center">{startIndex + index + 1}</td>
               <td>{p.name}</td>
               <td>{p.sku}</td>
-              <td>
-                {p.current_stock}
+              <td className="d-flex justify-content-between align-items-center">
+                <span>{p.current_stock}</span>
+                {p.current_stock <= p.reorder_level && (
+                  <span style={{ color: "orange", fontSize: "14px" }}>▼</span>
+                )}
               </td>
               <td>{p.reorder_level}</td>
               <td className="text-center">

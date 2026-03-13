@@ -13,11 +13,17 @@ export const fetchProducts = createAsyncThunk(
 /* Create product */
 export const createProduct = createAsyncThunk(
   "products/createProduct",
-  async (data) => {
-    const response = await api.post("/products", data);
-    return response.data;
-  }
-);
+  async (product, { rejectWithValue }) => {
+    try {
+      const res = await api.post(`/products`, product);
+      return res.data;
+    } catch (err) {
+      if (err.response) {
+        return rejectWithValue(err.response.data);
+      }
+      return rejectWithValue({ detail: "Server error" });
+    }
+  })
 
 /* Fetch product detail */
 export const fetchProductDetail = createAsyncThunk(
@@ -31,9 +37,16 @@ export const fetchProductDetail = createAsyncThunk(
 /* Add stock movement */
 export const addStockMovement = createAsyncThunk(
   "products/addStockMovement",
-  async (data) => {
-    const response = await api.post("/stock-movements", data);
-    return response.data;
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await api.post("/stock-movements", data);
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        return rejectWithValue(error.response.data);
+      }
+      return rejectWithValue({ detail: "Server error" });
+    }
   }
 );
 /* Get stock movements */
