@@ -1,12 +1,15 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
-from app.db import get_db
+from app.db import get_db, SessionLocal, engine, Base
 from sqlalchemy import func
 from app.models import Product, StockMovement
 from app.schemas import ProductCreate, ProductResponse, StockMovementCreate, StockMovementResponse
 
 app = FastAPI()
+
+Base.metadata.create_all(bind=engine)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -17,7 +20,6 @@ app.add_middleware(
 
 @app.post("/products", response_model=ProductResponse)
 def create_product(product: ProductCreate, db: Session = Depends(get_db)):
-
         existing = db.query(Product).filter((Product.name == product.name) | (Product.sku == product.sku)).first()
         if existing:
           raise HTTPException(status_code=409,detail="Product with same name or SKU already exists")
@@ -42,6 +44,10 @@ def create_stock_movement(data: StockMovementCreate, db: Session = Depends(get_d
     product = db.query(Product).filter(Product.id == data.product_id).first()
     if not product:
         raise HTTPException(status_code=404,detail="Product not found")
+    current_stock = db.query(func.sum(StockMovement.delta)).filter(StockMovement.product_id == data.product_id).scalar()
+    if current_stock is None: current_stock = 0
+    if data.delta < 0 and (current_stock + data.delta) < 0:
+        raise HTTPException(status_code=400,detail="Stock cannot go below zero")
     new_movement = StockMovement(
         product_id = data.product_id,
         delta = data.delta,
@@ -74,7 +80,7 @@ def get_products(low_stock: bool = False, db: Session = Depends(get_db)):
     query = (
         db.query(Product.id,Product.name,Product.sku,Product.reorder_level,func.coalesce(func.sum(StockMovement.delta), 0).label("current_stock"))
           .outerjoin(StockMovement, Product.id == StockMovement.product_id)
-          .group_by(Product.id)
+          .group_by(Product.id).order_by(Product.id.desc())
     )
     if low_stock:
         query = query.having(func.coalesce(func.sum(StockMovement.delta), 0) <= Product.reorder_level)
