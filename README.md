@@ -290,7 +290,7 @@ A frontend unit test is implemented using **React Testing Library**.
 Test file:
 
 ```
-src/components/ProductList.test.js
+src/components/CreateProductModal.test.js
 ```
 
 Run unit tests:
@@ -302,11 +302,11 @@ npm test
 Example output:
 
 ```
-PASS src/components/ProductList.test.js
-✓ renders product list with product name
+PASS src/components/CreateProductModal.test.js
+✓ renders CreateProductModal dialog
 ```
 
-This test verifies that the ProductList component renders product data correctly.
+This test verifies that the CreateProductModal component renders correctly.
 
 ---
 
