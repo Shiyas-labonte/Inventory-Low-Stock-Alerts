@@ -28,9 +28,15 @@ export const createProduct = createAsyncThunk(
 /* Fetch product detail */
 export const fetchProductDetail = createAsyncThunk(
   "products/fetchProductDetail",
-  async (id) => {
-    const response = await api.get(`/products/${id}`);
-    return response.data;
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/products/${id}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.detail || "NOT FOUND"
+      );
+    }
   }
 );
 
@@ -52,10 +58,14 @@ export const addStockMovement = createAsyncThunk(
 /* Get stock movements */
 export const getMovements = createAsyncThunk(
   "products/getMovements",
-  async (productId) => {
-
-    const res = await api.get(`/movements/${productId}`);
-
-    return res.data;
+  async (productId, { rejectWithValue }) => {
+    try {
+      const res = await api.get(`/movements/${productId}`);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.detail || "Failed to load movements"
+      );
+    }
   }
 );

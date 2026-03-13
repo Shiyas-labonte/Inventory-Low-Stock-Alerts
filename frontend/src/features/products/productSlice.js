@@ -48,8 +48,17 @@ const productSlice = createSlice({
         state.list.unshift(action.payload);
       })
 
+      .addCase(fetchProductDetail.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+      })
       .addCase(fetchProductDetail.fulfilled, (state, action) => {
+        state.loading = false;
         state.detail = action.payload;
+      })
+      .addCase(fetchProductDetail.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
 
       .addCase(addStockMovement.fulfilled, (state, action) => {
@@ -57,8 +66,17 @@ const productSlice = createSlice({
           state.detail.current_stock = action.payload.current_stock;
         }
       })
+      .addCase(getMovements.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(getMovements.fulfilled, (state, action) => {
+        state.loading = false;
         state.movements = action.payload;
+      })
+      .addCase(getMovements.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
 
   }

@@ -90,5 +90,8 @@ def get_products(low_stock: bool = False, db: Session = Depends(get_db)):
 
 @app.get("/movements/{product_id}")
 def get_product_movements(product_id: int, db: Session = Depends(get_db)):
+    product = db.query(Product).filter(Product.id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
     movements = db.query(StockMovement).filter(StockMovement.product_id == product_id).order_by(StockMovement.id.asc()).all()
     return movements

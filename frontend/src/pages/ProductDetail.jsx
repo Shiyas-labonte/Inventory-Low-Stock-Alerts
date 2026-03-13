@@ -10,9 +10,11 @@ function ProductDetail() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { detail } = useSelector((state) => state.products);
+  const { detail, loading, error } = useSelector((state) => state.products);
 
   useEffect(() => {dispatch(fetchProductDetail(id));}, [dispatch, id]);
+  if (loading) return <p className="text-center mt-5">Loading...</p>;
+  if (error) return <p className="text-center mt-5 text-danger">{error}</p>;
   if (!detail) return <p className="text-center mt-5">Not found</p>;
   return (
     <div className="container mt-4">

@@ -8,14 +8,24 @@ function ProductMovements() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-    const product = useSelector((state) => state.products.detail);
+  const product = useSelector((state) => state.products.detail);
   const movements = useSelector((state) => state.products.movements);
+  const error = useSelector((state) => state.products.error);
   const currentStock = movements.reduce((total, m) => total + m.delta, 0);
 
   useEffect(() => {
     dispatch(getMovements(id));
     dispatch(fetchProductDetail(id));
   }, [dispatch, id]);
+  if (error) {
+    return (
+      <div className="container mt-5">
+        <div className="alert alert-danger text-center">
+          {error}
+        </div>
+      </div>
+    );
+  }
 
   return (
 
@@ -32,13 +42,27 @@ function ProductMovements() {
           </tr>
         </thead>
         <tbody>
-          {movements.map((m) => (
-            <tr key={m.id}>
-            <td>{new Date(m.created_at).toLocaleString()}</td>
-            <td>{m.reason || "-"}</td>
-            <td>{m.delta > 0 ? (<span className="text-success fw-bold">+{m.delta}</span>) : (<span className="text-danger fw-bold">{m.delta}</span>)}</td>
+          {movements.length === 0 ? (
+            <tr>
+              <td colSpan="3" className="text-center text-muted">
+                No stock movements found
+              </td>
             </tr>
-          ))}
+            ) : (
+            movements.map((m) => (
+              <tr key={m.id}>
+                <td>{new Date(m.created_at).toLocaleString()}</td>
+                <td>{m.reason || "-"}</td>
+                <td>
+                  {m.delta > 0 ? (
+                    <span className="text-success fw-bold">+{m.delta}</span>
+                  ) : (
+                    <span className="text-danger fw-bold">{m.delta}</span>
+                  )}
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
         <tfoot className="table-light">
             <tr>
